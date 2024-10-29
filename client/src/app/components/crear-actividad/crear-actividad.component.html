@@ -1,0 +1,64 @@
+<div class="container mt-5">
+    <h2>Crear Actividad</h2>
+    
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input type="text" id="title" class="form-control" formControlName="title">
+        <div *ngIf="formulario.get('title')?.invalid && formulario.get('title')?.touched" class="text-danger">
+          El título es obligatorio.
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea id="description" class="form-control" formControlName="description"></textarea>
+        <div *ngIf="formulario.get('description')?.invalid && formulario.get('description')?.touched" class="text-danger">
+          La descripción es obligatoria.
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="assignedTo">Asignar a</label>
+        <select id="assignedTo" class="form-control" formControlName="assignedTo">
+          <option value="" disabled selected>Selecciona un empleado</option>
+          <option *ngFor="let empleado of empleados" [value]="empleado._id">{{ empleado.nombre }}</option>
+        </select>
+        <div *ngIf="formulario.get('assignedTo')?.invalid && formulario.get('assignedTo')?.touched" class="text-danger">
+          Debes asignar la actividad a un empleado.
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <label for="startDate" class="form-label">Fecha de inicio</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          id="startDate" 
+          formControlName="startDate"
+          [min]="today"
+          [ngClass]="{'is-invalid': formulario.get('startDate')?.errors && formulario.get('startDate')?.touched}"
+        >
+        <div class="invalid-feedback" *ngIf="formulario.get('startDate')?.errors?.['fechaInvalida']">
+          La fecha de inicio no puede ser anterior a hoy
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="endDate">Fecha de Fin</label>
+        <input type="date" id="endDate" class="form-control" formControlName="endDate">
+        <div *ngIf="formulario.get('endDate')?.invalid && formulario.get('endDate')?.touched" class="text-danger">
+          La fecha de fin es obligatoria.
+        </div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid">Crear Actividad</button>
+    </form>
+  
+    <div *ngIf="mensaje" class="alert alert-info mt-3" role="alert">
+      {{ mensaje }}
+    </div>
+  </div>
+  
+  
+  

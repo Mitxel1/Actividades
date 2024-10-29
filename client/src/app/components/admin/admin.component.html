@@ -1,0 +1,103 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Admin Panel</a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/crear-actividad">Crear actividad</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/">Registrar Usuarios</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" (click)="onClickLogout()">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h1>Bienvenido al Panel de Administración</h1>
+
+  <div class="container mt-4">
+    <h2>Actividades</h2>
+
+    <!-- Filtros de búsqueda -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <!-- Menú desplegable para el filtro de estatus -->
+        <select class="form-control" [(ngModel)]="statusFilter">
+          <option value="">Filtrar por estatus</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="En Progreso">En Progreso</option>
+          <option value="Completada">Completada</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control" placeholder="Filtrar por nombre del empleado" [(ngModel)]="employeeNameFilter">
+      </div>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Asignado a</th>
+          <th>Fecha de Inicio</th>
+          <th>Fecha de Fin</th>
+          <th>Estatus</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let actividad of filteredActividades">
+          <td>{{ actividad.title }}</td>
+          <td>{{ actividad.description }}</td>
+          <td>{{ actividad.assignedTo.nombre }}</td>
+          <td>{{ actividad.startDate | date: 'short' }}</td>
+          <td>{{ actividad.endDate | date: 'short' }}</td>
+          <td>{{ actividad.status }}</td>
+          <td>
+            <!-- Botones para Editar y Eliminar -->
+            <button class="btn btn-warning btn-sm" (click)="seleccionarActividad(actividad)">Editar</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarActividad(actividad._id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Mostrar el formulario de edición si hay una actividad seleccionada -->
+    <div *ngIf="actividadSeleccionada" class="mt-4">
+      <h3>Editar Actividad</h3>
+      <form (ngSubmit)="editarActividad()">
+        <div class="form-group">
+          <label for="title">Título</label>
+          <input type="text" id="title" class="form-control" [(ngModel)]="actividadSeleccionada.title" name="title" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea id="description" class="form-control" [(ngModel)]="actividadSeleccionada.description" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="assignedTo">Asignado a</label>
+          <input type="text" id="assignedTo" class="form-control" [(ngModel)]="actividadSeleccionada.assignedTo" name="assignedTo" required>
+        </div>
+        <div class="form-group">
+          <label for="startDate">Fecha de Inicio</label>
+          <input type="date" id="startDate" class="form-control" [(ngModel)]="actividadSeleccionada.startDate" name="startDate" required>
+        </div>
+        <div class="form-group">
+          <label for="endDate">Fecha de Fin</label>
+          <input type="date" id="endDate" class="form-control" [(ngModel)]="actividadSeleccionada.endDate" name="endDate" required>
+        </div>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <button type="button" class="btn btn-secondary" (click)="actividadSeleccionada = null">Cancelar</button>
+      </form>
+    </div>
+
+    <!-- Mostrar mensaje si existe -->
+    <div *ngIf="mensaje" class="alert alert-danger mt-3">
+      {{ mensaje }}
+    </div>
+  </div>
+</div>
