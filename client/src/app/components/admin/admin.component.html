@@ -1,103 +1,142 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Admin Panel</a>
+  <a class="navbar-brand" href="/admin">
+    <img src="assets/img/logo.png" height="50" class="d-inline-block align-top" alt="Logo">
+  </a>
   <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav w-100">
       <li class="nav-item">
         <a class="nav-link" href="/crear-actividad">Crear actividad</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/">Registrar Usuarios</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" (click)="onClickLogout()">Logout</a>
+      <!-- Logout button aligned to the right -->
+      <li class="nav-item ms-auto">
+        <a class="btn btn-danger" href="#" (click)="onClickLogout()">Logout</a>
       </li>
     </ul>
   </div>
 </nav>
 
+
 <div class="container mt-4">
   <h1>Bienvenido al Panel de Administración</h1>
 
-  <div class="container mt-4">
-    <h2>Actividades</h2>
-
-    <!-- Filtros de búsqueda -->
-    <div class="row mb-3">
-      <div class="col-md-4">
-        <!-- Menú desplegable para el filtro de estatus -->
+  <div class="container mt-5">
+    <h2 class="text-center">Gestión de Actividades</h2>
+  
+    <!-- Filtros de bsqueda -->
+    <div class="d-flex justify-content-center mb-4">
+      <div class="form-group mx-2">
+        <!-- Filtro de estatus -->
         <select class="form-control" [(ngModel)]="statusFilter">
-          <option value="">Filtrar por estatus</option>
+          <option value="">Estatus</option>
           <option value="Pendiente">Pendiente</option>
           <option value="En Progreso">En Progreso</option>
           <option value="Completada">Completada</option>
         </select>
       </div>
-      <div class="col-md-4">
-        <input type="text" class="form-control" placeholder="Filtrar por nombre del empleado" [(ngModel)]="employeeNameFilter">
+      <div class="form-group mx-2">
+        <!-- Filtro por nombre del empleado -->
+        <input type="text" class="form-control" placeholder="Nombre del empleado" [(ngModel)]="employeeNameFilter">
       </div>
     </div>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Descripción</th>
-          <th>Asignado a</th>
-          <th>Fecha de Inicio</th>
-          <th>Fecha de Fin</th>
-          <th>Estatus</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let actividad of filteredActividades">
-          <td>{{ actividad.title }}</td>
-          <td>{{ actividad.description }}</td>
-          <td>{{ actividad.assignedTo.nombre }}</td>
-          <td>{{ actividad.startDate | date: 'short' }}</td>
-          <td>{{ actividad.endDate | date: 'short' }}</td>
-          <td>{{ actividad.status }}</td>
-          <td>
-            <!-- Botones para Editar y Eliminar -->
-            <button class="btn btn-warning btn-sm" (click)="seleccionarActividad(actividad)">Editar</button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarActividad(actividad._id)">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Mostrar el formulario de edición si hay una actividad seleccionada -->
-    <div *ngIf="actividadSeleccionada" class="mt-4">
-      <h3>Editar Actividad</h3>
-      <form (ngSubmit)="editarActividad()">
-        <div class="form-group">
-          <label for="title">Título</label>
-          <input type="text" id="title" class="form-control" [(ngModel)]="actividadSeleccionada.title" name="title" required>
+  
+    <!-- Lista de actividades en tarjetas -->
+    <div class="row">
+      <div *ngFor="let actividad of filteredActividades" class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <!-- Cuadro del Título -->
+          <div class="card-header text-white bg-primary text-center p-3">
+            <h5 class="card-title mb-0">{{ actividad.title }}</h5>
+          </div>
+          
+          <!-- Cuadro de Descripción -->
+          <div class="card-body">
+            <div class="descripcion bg-light p-2 mb-3">
+              <p class="card-text text-muted mb-0">{{ actividad.description }}</p>
+            </div>
+            
+            <!-- Cuadro de Detalles -->
+            <div class="detalles bg-white p-2">
+              <ul class="list-unstyled mb-0">
+                <li><strong>Asignado a:</strong> {{ actividad.assignedTo.nombre }}</li>
+                <li><strong>Inicio:</strong> {{ actividad.startDate | date: 'short' }}</li>
+                <li><strong>Fin:</strong> {{ actividad.endDate | date: 'short' }}</li>
+                <li><strong>Estatus:</strong> 
+                  <span class="badge text-dark" 
+                        [ngClass]="{
+                          'badge-success': actividad.status === 'Completada',
+                          'badge-warning': actividad.status === 'En Progreso',
+                          'badge-secondary': actividad.status === 'Pendiente'
+                        }">
+                    {{ actividad.status }}
+                  </span>
+                </li>
+                <li *ngIf="actividad.status === 'Completada'">
+                  <strong>Actividad Iniciada:</strong> {{ actividad.actualStartDate | date: 'short' }} 
+                </li>
+                <li *ngIf="actividad.status === 'Completada'">
+                  <strong>Actividad Fin:</strong> {{ actividad.actualEndDate | date: 'short' }} 
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Botones -->
+          <div class="card-footer d-flex justify-content-between">
+          <!-- Mostrar botones de edición y eliminación solo si no está verificada -->
+              <ng-container *ngIf="!actividad.verificada">
+                  <button class="btn btn-outline-primary btn-sm" (click)="seleccionarActividad(actividad)">Editar</button>
+                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarActividad(actividad._id)">Eliminar</button>
+          <!-- Mostrar el botón "Verificar" si la actividad está completada -->
+          <div *ngIf="actividad.status === 'Completada'">
+                  <!-- <button class="btn btn-success btn-sm" (click)="confirmarVerificacion(actividad)">Verificar</button>-->
+          </div>
+              </ng-container>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="description">Descripción</label>
-          <textarea id="description" class="form-control" [(ngModel)]="actividadSeleccionada.description" name="description" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="assignedTo">Asignado a</label>
-          <input type="text" id="assignedTo" class="form-control" [(ngModel)]="actividadSeleccionada.assignedTo" name="assignedTo" required>
-        </div>
-        <div class="form-group">
-          <label for="startDate">Fecha de Inicio</label>
-          <input type="date" id="startDate" class="form-control" [(ngModel)]="actividadSeleccionada.startDate" name="startDate" required>
-        </div>
-        <div class="form-group">
-          <label for="endDate">Fecha de Fin</label>
-          <input type="date" id="endDate" class="form-control" [(ngModel)]="actividadSeleccionada.endDate" name="endDate" required>
-        </div>
-        <button type="submit" class="btn btn-success">Guardar Cambios</button>
-        <button type="button" class="btn btn-secondary" (click)="actividadSeleccionada = null">Cancelar</button>
-      </form>
+      </div>
     </div>
-
-    <!-- Mostrar mensaje si existe -->
-    <div *ngIf="mensaje" class="alert alert-danger mt-3">
+    
+  
+    <!-- Formulario de edición en una tarjeta flotante -->
+    <div *ngIf="actividadSeleccionada" class="card mt-5 shadow-lg">
+      <div class="card-header text-white bg-info">
+        <h3>Editar Actividad</h3>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="editarActividad()">
+          <div class="form-group">
+            <label for="title">Título</label>
+            <input type="text" id="title" class="form-control" [(ngModel)]="actividadSeleccionada.title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea id="description" class="form-control" [(ngModel)]="actividadSeleccionada.description" name="description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="assignedTo">Asignado a</label>
+            <input type="text" id="assignedTo" class="form-control" [(ngModel)]="actividadSeleccionada.assignedTo" name="assignedTo" required>
+          </div>
+          <div class="form-group">
+            <label for="startDate">Fecha de Inicio</label>
+            <input type="date" id="startDate" class="form-control" [(ngModel)]="actividadSeleccionada.startDate" name="startDate" required>
+          </div>
+          <div class="form-group">
+            <label for="endDate">Fecha de Fin</label>
+            <input type="date" id="endDate" class="form-control" [(ngModel)]="actividadSeleccionada.endDate" name="endDate" required>
+          </div>
+          <button type="submit" class="btn btn-success mt-3">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary mt-3" (click)="actividadSeleccionada = null">Cancelar</button>
+        </form>
+      </div>
+    </div>
+  
+    <!-- Mostrar mensaje de error -->
+    <div *ngIf="mensaje" class="alert alert-danger mt-4 text-center">
       {{ mensaje }}
     </div>
   </div>
+  
 </div>

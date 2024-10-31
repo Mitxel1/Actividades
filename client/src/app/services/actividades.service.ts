@@ -120,6 +120,18 @@ export class ActividadesService {
     );
   }
 
+  // Método para completar una actividad
+// Método para verificar una actividad
+verificarActividad(id: string) {
+  const token = localStorage.getItem('token');
+  return firstValueFrom(
+    this.httpClient.post<any>(`${this.baseUrl}/verificar/${id}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+  );
+}
+
+
 }
 
 

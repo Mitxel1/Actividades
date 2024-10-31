@@ -21,5 +21,7 @@ router.post('/completar-actividad/:id', checkToken,actividadesControllers.comple
 
 router.get('/filtrar', checkToken, actividadesControllers.filtrarActividades);
 
+router.put('/verificar/:id',checkToken,actividadesControllers.verificarActividad);
+
 
 module.exports = router;

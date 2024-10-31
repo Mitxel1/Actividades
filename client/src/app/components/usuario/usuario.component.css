@@ -1,0 +1,33 @@
+.navbar {
+    padding: 0.5rem 1rem;
+  }
+  
+  .navbar-brand {
+    padding: 0;
+  }
+  
+  .nav-link {
+    color: #333 !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: color 0.3s ease;
+  }
+  
+  
+  .nav-link:hover {
+    color: #007bff !important;
+  }
+  
+  .dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .dropdown-item i {
+    width: 20px;
+    text-align: center;
+  }
+  
+  .shadow-sm {
+    box-shadow: 0 2px 4px rgba(0,0,0,.075) !important;
+  }

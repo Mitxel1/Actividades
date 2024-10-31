@@ -95,6 +95,9 @@ export class AdminComponent implements OnInit {
     );
   }
 
+  // Confirmar la verificación de la actividad
+  
+
   // Cerrar sesión
   onClickLogout(): void {
     localStorage.removeItem('token');

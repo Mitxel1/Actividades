@@ -38,6 +38,7 @@ export class CalendarioComponent implements OnInit{
     { primary: '#20c997', secondary: '#D2F4EA' }, // Turquesa
     { primary: '#6f42c1', secondary: '#E2D9F3' }  // Índigo
   ];
+  router: any;
 
   constructor(private actividadesService: ActividadesService) {} // Asegúrate de importar tu servicio
 
@@ -98,5 +99,11 @@ export class CalendarioComponent implements OnInit{
 
   setView(view: CalendarView) {
     this.view = view;
+  }
+
+
+  onClickLogout(){
+    localStorage.removeItem('token');
+    this.router.navigate(['/login'])
   }
 }

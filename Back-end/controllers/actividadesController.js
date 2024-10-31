@@ -176,3 +176,26 @@ exports.completarActividad = async (req, res) => {
       res.status(500).send('Hubo un error al completar la actividad');
   }
 };
+
+// Verificar actividad
+exports.verificarActividad = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const actividad = await Actividad.findById(id);
+    
+    if (!actividad) {
+      return res.status(404).json({ message: 'Actividad no encontrada.' });
+    }
+
+    // Aquí puedes agregar la lógica para cambiar el estado de la actividad si es necesario
+    actividad.status = 'Completada';
+    await actividad.save();
+
+    return res.status(200).json({ message: 'Actividad verificada.', actividad });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error al verificar la actividad.' });
+  }
+};
+

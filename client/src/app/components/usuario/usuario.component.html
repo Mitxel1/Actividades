@@ -1,20 +1,26 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Admin Panel</a>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="nav nav-pills">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="/empleado">Inicio</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/calendario">Calendario</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" (click)="onClickLogout()">Logout</a>
-          </li>   
-        </ul>
-    </div>
-  </nav>
-  
+  <a class="navbar-brand" href="/empleado">
+    <img src="assets/img/logo.png" height="50" class="d-inline-block align-top" alt="Logo">
+  </a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav w-100">
+      <li class="nav-item">
+        <a class="btn btn-success nav-link text-dark" href="/calendario">Calendario</a>
+      </li>
+      <li class="nav-item">
+        <a class="btn btn-success nav-link text-dark" aria-current="page" href="/empleado">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="btn btn-success nav-link text-dark" href="/usuario">Yo</a>
+      </li>
+      <!-- Logout button aligned to the right -->
+      <li class="nav-item ms-auto">
+        <a class="btn btn-danger" href="#" (click)="onClickLogout()">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
   <div class="container mt-4">
     <h1>Bienvenido, {{ usuarioActual?.nombre }}</h1>
   
@@ -46,5 +52,4 @@
     <ng-template #cargando>
       <p>Cargando datos del usuario...</p>
     </ng-template>
-  
   
