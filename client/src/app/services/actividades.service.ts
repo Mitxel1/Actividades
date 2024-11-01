@@ -44,6 +44,7 @@ export class ActividadesService {
     );
   }
 
+
   actualizarEstatusActividad(id: string, data: any) {
     const token = localStorage.getItem('token');
     return firstValueFrom(
@@ -52,9 +53,6 @@ export class ActividadesService {
       })
     );
   }
-  
-
-
   // Método para actualizar una actividad
   actualizarActividad(id: string, formValue: any) {
     const token = localStorage.getItem('token');
@@ -120,18 +118,24 @@ export class ActividadesService {
     );
   }
 
-  // Método para completar una actividad
-// Método para verificar una actividad
-verificarActividad(id: string) {
-  const token = localStorage.getItem('token');
-  return firstValueFrom(
-    this.httpClient.post<any>(`${this.baseUrl}/verificar/${id}`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-  );
-}
-
-
+  // Método para obtener las notificaciones
+  obtenerNotificaciones() {
+    const token = localStorage.getItem('token');
+    return firstValueFrom(
+      this.httpClient.get<any[]>(`${this.baseUrl}/notificaciones`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+    );
+  }
+  
+  obtenerActividades(){
+    const token = localStorage.getItem('token');
+    return firstValueFrom(
+      this.httpClient.get<any[]>(`${this.baseUrl}/actividades`, {
+        headers: { Authorization: `Bearer ${token}` } // Agrega el token en el header
+      })
+    );
+  }
 }
 
 

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ActividadesService } from 'src/app/services/actividades.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { ToastrService } from 'ngx-toastr';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-admin',
@@ -10,97 +11,103 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
-
-  actividades: any[] = [];  // Almacena las actividades creadas
-  actividadSeleccionada: any = null;  // Actividad seleccionada para editar
+  actividades: any[] = [];
+  actividadSeleccionada: any = null;
   mensaje: string | null = null;
-  // Agrega las propiedades de filtro
+  filteredActividades: any[] = [];
   statusFilter: string = '';
   employeeNameFilter: string = '';
+  loading: boolean = true;
+  empleados: any[] = [];
 
   constructor(
     private router: Router,
     private usuarioServices: UsuariosService,
     private actividadesService: ActividadesService,
-    private toastr : ToastrService
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.cargarActividades();  // Cargar las actividades cuando se inicializa el componente
-    this.cargarActividadesUsuario();
+    this.cargarActividades();
+    this.cargarEmpleados();
   }
 
-  //Car
-  cargarActividadesUsuario(): void {
-    this.actividadesService.filtrarActividades(this.statusFilter, this.employeeNameFilter)
-      .then(actividades => {
-        this.actividades = actividades || [];;
-      })
-      .catch(error => console.error(error));
-  }
-
-  // Cargar actividades creadas por el usuario
   cargarActividades(): void {
+    this.loading = true;
     this.actividadesService.obtenerActividadesPorUsuario()
       .then(actividades => {
-        this.actividades = actividades; // Almacenar las actividades
+        this.actividades = actividades;
+        this.filteredActividades = [...actividades]; // Inicializar las actividades filtradas
+        this.loading = false;
       })
       .catch(error => {
         console.error('Error al cargar actividades:', error);
         this.mensaje = 'Error al cargar actividades.';
+        this.loading = false;
       });
   }
 
-  // Función para seleccionar una actividad para editar
   seleccionarActividad(actividad: any): void {
-    this.actividadSeleccionada = { ...actividad };  // Clonar la actividad seleccionada
+    this.actividadSeleccionada = { ...actividad };
   }
 
-  // Editar la actividad seleccionada
   editarActividad(): void {
     if (this.actividadSeleccionada) {
+      this.loading = true;
       this.actividadesService.actualizarActividad(this.actividadSeleccionada._id, this.actividadSeleccionada)
         .then(() => {
-          this.toastr.success('Exitoso!', 'Actividad actualizada con éxito.!');
-          this.cargarActividades();  // Recargar las actividades después de editar
-          this.actividadSeleccionada = null;  // Limpiar la selección
+          this.toastr.success('Exitoso!', 'Actividad actualizada con éxito!');
+          this.cargarActividades(); // Usar cargarActividades en lugar de obtenerActividades
+          this.actividadSeleccionada = null;
         })
         .catch(error => {
           console.error('Error al actualizar la actividad:', error);
           this.toastr.error('Error al actualizar la actividad.');
+        })
+        .finally(() => {
+          this.loading = false;
         });
     }
   }
 
-  // Eliminar la actividad seleccionada
   eliminarActividad(id: string): void {
     if (confirm('¿Estás seguro de que deseas eliminar esta actividad?')) {
+      this.loading = true;
       this.actividadesService.eliminarActividad(id)
         .then(() => {
-          this.toastr.success('Exitoso!', 'Actividad eliminada con éxito.!');
-          this.cargarActividades();  // Recargar actividades después de eliminar
+          this.toastr.success('Exitoso!', 'Actividad eliminada con éxito!');
+          this.cargarActividades(); // Usar cargarActividades en lugar de obtenerActividades
         })
         .catch(error => {
           console.error('Error al eliminar la actividad:', error);
           this.toastr.error('Error al eliminar la actividad.');
+        })
+        .finally(() => {
+          this.loading = false;
         });
     }
   }
 
-  // Método de filtro para actividades
-  get filteredActividades() {
-    return this.actividades.filter(actividad => 
-      (this.statusFilter ? actividad.status === this.statusFilter : true) &&
-      (this.employeeNameFilter ? actividad.assignedTo.nombre.includes(this.employeeNameFilter) : true)
-    );
+  filtrarActividades(): void {
+    this.filteredActividades = this.actividades.filter(actividad => {
+      const cumpleStatus = !this.statusFilter || actividad.status === this.statusFilter;
+      const cumpleEmpleado = !this.employeeNameFilter || 
+        actividad.empleado.toLowerCase().includes(this.employeeNameFilter.toLowerCase());
+      return cumpleStatus && cumpleEmpleado;
+    });
   }
 
-  // Confirmar la verificación de la actividad
-  
+  cargarEmpleados(): void {
+    this.actividadesService.obtenerEmpleados()
+      .then(empleados => {
+        this.empleados = empleados;
+      })
+      .catch(error => console.error("Error al cargar empleados:", error));
+  }
 
-  // Cerrar sesión
   onClickLogout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('rol');
     this.router.navigate(['/login']);
   }
 }

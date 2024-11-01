@@ -17,6 +17,7 @@ export class EmpleadoComponent {
   actividades: any[] = [];  // Arreglo para almacenar las actividades asignadas al empleado
   mensaje: string | null = null;
   toastr = inject(ToastrService);
+  notificaciones: any[] = []; // Para almacenar las notificaciones
   
   ngOnInit(): void {
     this.cargarActividadesAsignadas();
@@ -58,8 +59,7 @@ export class EmpleadoComponent {
         });
     }
   }
-  
-  
+
   onClickLogout(){
     localStorage.removeItem('token');
     this.router.navigate(['/login'])

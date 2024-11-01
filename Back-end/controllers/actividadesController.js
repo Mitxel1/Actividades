@@ -1,4 +1,5 @@
 const Actividades = require("../models/actividades");
+const Usuario = require('../models/usuario');
 
 // Crear una nueva actividad
 exports.crearActividad = async (req, res) => {
@@ -16,8 +17,9 @@ exports.crearActividad = async (req, res) => {
         endDate,
         status
       });
-  
-      await actividad.save();
+
+    // Guardar la actividad en la base de datos
+    await actividad.save();
       res.status(201).json(actividad);
     } catch (error) {
       console.log(error);
@@ -46,22 +48,15 @@ exports.obtenerActividadesPorUsuario = async (req, res) => {
 
 
 // Obtener una actividad por ID
-exports.obtenerActividad = async (req, res) => {
-    try {
-        const actividad = await Actividades.findById(req.params.id)
-            .populate('createdBy')
-            .populate('assignedTo');
-        
-        if (!actividad) {
-            return res.status(404).json({ msg: 'No existe la actividad' });
-        }
-
-        res.json(actividad);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Hubo un error al obtener la actividad');
-    }
+exports.obtenerActividades = async (req, res) => {
+  try {
+      const actividades = await Actividades.find({ createdBy: req.user.id }).populate('assignedTo', 'nombre'); 
+      res.status(200).json(actividades);
+  } catch (error) {
+      res.status(500).json({ message: 'Error al obtener las actividades' });
+  }
 };
+
 
 
 // Actualizar una actividad
@@ -182,7 +177,7 @@ exports.verificarActividad = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const actividad = await Actividad.findById(id);
+    const actividad = await Actividades.findById(id);
     
     if (!actividad) {
       return res.status(404).json({ message: 'Actividad no encontrada.' });

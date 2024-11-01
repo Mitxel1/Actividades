@@ -66,3 +66,222 @@
   .shadow-sm {
     box-shadow: 0 2px 4px rgba(0,0,0,.075) !important;
   }
+
+  
+.navbar {
+  padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+  padding: 0;
+}
+
+.nav-link {
+  color: #333 !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  transition: color 0.3s ease;
+}
+
+
+.nav-link:hover {
+  color: #007bff !important;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.dropdown-item i {
+  width: 20px;
+  text-align: center;
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 4px rgba(0,0,0,.075) !important;
+}
+
+/* Animación base para elementos deslizantes */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Elementos con animación */
+.navbar, h1, h2, .row, table, form, .alert, .form-group {
+  opacity: 0;
+  animation: slideDown 0.8s ease-in-out forwards;
+}
+
+/* Retrasos secuenciales para cada elemento */
+.navbar {
+  animation-delay: 0.1s;
+}
+h1 {
+  animation-delay: 0.2s;
+}
+h2 {
+  animation-delay: 0.3s;
+}
+/* Nuevo: Animación para los filtros */
+.form-group:nth-child(1) {
+  animation-delay: 0.35s;
+}
+.form-group:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.row {
+  animation-delay: 0.45s;
+}
+table {
+  animation-delay: 0.5s;
+}
+form {
+  animation-delay: 0.6s;
+}
+.alert {
+  animation-delay: 0.7s;
+}
+
+/* Estilos existentes del navbar */
+.navbar {
+  padding: 0.5rem 1rem;
+}
+.navbar-brand {
+  padding: 0;
+}
+.nav-link {
+  color: #333 !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  transition: color 0.3s ease;
+}
+.nav-link:hover {
+  color: #007bff !important;
+}
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+.dropdown-item i {
+  width: 20px;
+  text-align: center;
+}
+.shadow-sm {
+  box-shadow: 0 2px 4px rgba(0,0,0,.075) !important;
+}
+
+/* Estilos del componente admin */
+:host {
+  display: block;
+}
+.fixed {
+  overflow-y: auto;
+}
+input, select {
+  height: 42px;
+}
+button i {
+  font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .flex-wrap {
+    width: 100%;
+  }
+  input, select {
+    width: 100%;
+  }
+}
+
+/* Estilos de las tarjetas */
+.card {
+  border: none;
+  transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+.card-title {
+  font-size: 1.25rem;
+}
+.card-footer {
+  background-color: #f8f9fa;
+}
+
+/* Estilos de los botones */
+.btn-outline-primary {
+  color: #007bff;
+  border-color: #007bff;
+}
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+/* Estilos de los badges */
+.badge {
+  padding: 0.4em 0.6em;
+}
+.badge-success {
+  background-color: #28a745;
+}
+.badge-warning {
+  background-color: #ffc107;
+}
+.badge-secondary {
+  background-color: #6c757d;
+}
+
+/* Estilos del formulario */
+.card-header.bg-info {
+  background-color: #17a2b8;
+}
+.form-control {
+  border-radius: 0.25rem;
+}
+.form-group label {
+  font-weight: bold;
+}
+.mt-3 .btn-success {
+  background-color: #28a745;
+  border: none;
+}
+.mt-3 .btn-success:hover {
+  background-color: #218838;
+}
+.mt-3 .btn-secondary {
+  background-color: #6c757d;
+  border: none;
+}
+.mt-3 .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Estilos de alertas */
+.alert-danger {
+  border-radius: 0.25rem;
+  font-size: 1rem;
+}
+
+/* Estilos de los filtros */
+.d-flex .form-control {
+  max-width: 250px;
+}

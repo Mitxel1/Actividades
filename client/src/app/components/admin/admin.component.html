@@ -25,11 +25,10 @@
   <div class="container mt-5">
     <h2 class="text-center">Gestión de Actividades</h2>
   
-    <!-- Filtros de bsqueda -->
+    <!-- Filtros de búsqueda -->
     <div class="d-flex justify-content-center mb-4">
       <div class="form-group mx-2">
-        <!-- Filtro de estatus -->
-        <select class="form-control" [(ngModel)]="statusFilter">
+        <select class="form-control" [(ngModel)]="statusFilter" (change)="filtrarActividades()">
           <option value="">Estatus</option>
           <option value="Pendiente">Pendiente</option>
           <option value="En Progreso">En Progreso</option>
@@ -37,8 +36,7 @@
         </select>
       </div>
       <div class="form-group mx-2">
-        <!-- Filtro por nombre del empleado -->
-        <input type="text" class="form-control" placeholder="Nombre del empleado" [(ngModel)]="employeeNameFilter">
+        <input type="text" class="form-control" placeholder="Nombre del empleado" [(ngModel)]="employeeNameFilter" (input)="filtrarActividades()">
       </div>
     </div>
   
@@ -46,24 +44,19 @@
     <div class="row">
       <div *ngFor="let actividad of filteredActividades" class="col-md-6 col-lg-4 mb-4">
         <div class="card shadow-sm h-100">
-          <!-- Cuadro del Título -->
           <div class="card-header text-white bg-primary text-center p-3">
             <h5 class="card-title mb-0">{{ actividad.title }}</h5>
           </div>
-          
-          <!-- Cuadro de Descripción -->
           <div class="card-body">
             <div class="descripcion bg-light p-2 mb-3">
               <p class="card-text text-muted mb-0">{{ actividad.description }}</p>
             </div>
-            
-            <!-- Cuadro de Detalles -->
             <div class="detalles bg-white p-2">
               <ul class="list-unstyled mb-0">
                 <li><strong>Asignado a:</strong> {{ actividad.assignedTo.nombre }}</li>
                 <li><strong>Inicio:</strong> {{ actividad.startDate | date: 'short' }}</li>
                 <li><strong>Fin:</strong> {{ actividad.endDate | date: 'short' }}</li>
-                <li><strong>Estatus:</strong> 
+                <li><strong>Estatus:</strong>
                   <span class="badge text-dark" 
                         [ngClass]="{
                           'badge-success': actividad.status === 'Completada',
@@ -82,24 +75,16 @@
               </ul>
             </div>
           </div>
-          
-          <!-- Botones -->
           <div class="card-footer d-flex justify-content-between">
-          <!-- Mostrar botones de edición y eliminación solo si no está verificada -->
-              <ng-container *ngIf="!actividad.verificada">
-                  <button class="btn btn-outline-primary btn-sm" (click)="seleccionarActividad(actividad)">Editar</button>
-                  <button class="btn btn-outline-danger btn-sm" (click)="eliminarActividad(actividad._id)">Eliminar</button>
-          <!-- Mostrar el botón "Verificar" si la actividad está completada -->
-          <div *ngIf="actividad.status === 'Completada'">
-                  <!-- <button class="btn btn-success btn-sm" (click)="confirmarVerificacion(actividad)">Verificar</button>-->
-          </div>
-              </ng-container>
+            <ng-container *ngIf="!actividad.verificada">
+              <button class="btn btn-outline-primary btn-sm" (click)="seleccionarActividad(actividad)">Editar</button>
+              <button class="btn btn-outline-danger btn-sm" (click)="eliminarActividad(actividad._id)">Eliminar</button>
+            </ng-container>
           </div>
         </div>
       </div>
     </div>
     
-  
     <!-- Formulario de edición en una tarjeta flotante -->
     <div *ngIf="actividadSeleccionada" class="card mt-5 shadow-lg">
       <div class="card-header text-white bg-info">
@@ -115,10 +100,15 @@
             <label for="description">Descripción</label>
             <textarea id="description" class="form-control" [(ngModel)]="actividadSeleccionada.description" name="description" required></textarea>
           </div>
-          <div class="form-group">
-            <label for="assignedTo">Asignado a</label>
-            <input type="text" id="assignedTo" class="form-control" [(ngModel)]="actividadSeleccionada.assignedTo" name="assignedTo" required>
-          </div>
+         <div class="form-group">
+  <label for="assignedTo">Asignado a</label>
+  <select id="assignedTo" class="form-control" [(ngModel)]="actividadSeleccionada.assignedTo" name="assignedTo" required>
+    <option *ngFor="let empleado of empleados" [ngValue]="empleado._id">
+      {{ empleado.nombre }}
+    </option>
+  </select>
+</div>
+
           <div class="form-group">
             <label for="startDate">Fecha de Inicio</label>
             <input type="date" id="startDate" class="form-control" [(ngModel)]="actividadSeleccionada.startDate" name="startDate" required>

@@ -13,4 +13,5 @@ router.get('/usuarios', usuarioController.obtenerUsuarios);
 
 router.get('/actual',checkToken,usuarioController.actual);
 
+
 module.exports = router;

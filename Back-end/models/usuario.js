@@ -8,7 +8,7 @@ const usuarioSchema = new mongoose.Schema({
     departamento: { type: String, required:true},
     ubicacion: { type: String, required:true},
     password: { type: String, required: true },     // Contraseña encriptada
-    rol: { type: String, enum: ['admin', 'empleado'], required: true  // Rol del usuario
+    rol: { type: String, enum: ['admin', 'empleado'], required: true,  // Rol del usuario
   }
 });
 

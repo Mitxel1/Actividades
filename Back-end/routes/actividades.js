@@ -23,5 +23,7 @@ router.get('/filtrar', checkToken, actividadesControllers.filtrarActividades);
 
 router.put('/verificar/:id',checkToken,actividadesControllers.verificarActividad);
 
+router.get('/actividades', checkToken,actividadesControllers.obtenerActividades);
+
 
 module.exports = router;

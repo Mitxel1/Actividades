@@ -96,6 +96,7 @@ export class CrearActividadComponent implements OnInit {
     this.actividadesService.crearActividad(nuevaActividad)
       .then(response => {
         this.toastr.success('¡Evento registrado exitosamente!');
+        // Cargar notificaciones después de crear la actividad
         setTimeout(() => {
           this.router.navigate(['/admin']);
         }, 1000);
@@ -104,5 +105,6 @@ export class CrearActividadComponent implements OnInit {
         this.mensaje = error.error?.error || 'Error al crear la actividad';
       });
   }
+
 }
 

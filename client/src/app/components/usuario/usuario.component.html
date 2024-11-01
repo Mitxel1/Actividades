@@ -5,51 +5,48 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav w-100">
       <li class="nav-item">
-        <a class="btn btn-success nav-link text-dark" href="/calendario">Calendario</a>
+        <a class="btn nav-link text-dark" href="/calendario">Calendario</a>
       </li>
       <li class="nav-item">
-        <a class="btn btn-success nav-link text-dark" aria-current="page" href="/empleado">Inicio</a>
+        <a class="btn nav-link text-dark" aria-current="page" href="/empleado">Inicio</a>
       </li>
       <li class="nav-item">
-        <a class="btn btn-success nav-link text-dark" href="/usuario">Yo</a>
-      </li>
-      <!-- Logout button aligned to the right -->
-      <li class="nav-item ms-auto">
-        <a class="btn btn-danger" href="#" (click)="onClickLogout()">Logout</a>
+        <a class="btn nav-link text-dark" href="/usuario">Yo</a>
       </li>
     </ul>
   </div>
 </nav>
 
-  <div class="container mt-4">
-    <h1>Bienvenido, {{ usuarioActual?.nombre }}</h1>
   
+  <div class="container mt-4 fade-in-up">
+    <h1>Bienvenido, {{ usuarioActual?.nombre }}</h1>
     <div *ngIf="usuarioActual; else cargando">
-      <h3>Información del Usuario</h3>
-      <ul class="list-group">
+      <h3 class="mb-4">Información del Usuario</h3>
+      <ul class="list-group user-info">
         <li class="list-group-item">
-            <strong>Nombre completo:</strong> {{ usuarioActual.nombre }} {{ usuarioActual.apellidos }}
+          <strong>Nombre completo:</strong> <span>{{ usuarioActual.nombre }} {{ usuarioActual.apellidos }}</span>
         </li>
         <li class="list-group-item">
-          <strong>Email:</strong> {{ usuarioActual.email }}
+          <strong>Email:</strong> <span>{{ usuarioActual.email }}</span>
         </li>
         <li class="list-group-item">
-            <strong>Telefono:</strong> {{ usuarioActual.telefono }}
-          </li>
-          <li class="list-group-item">
-            <strong>Departamento:</strong> {{ usuarioActual.departamento }}
-          </li>
-          <li class="list-group-item">
-            <strong>Ubicacion:</strong> {{ usuarioActual.ubicacion }}
-          </li>
-        <li class="list-group-item">
-          <strong>Rol:</strong> {{ usuarioActual.rol }}
+          <strong>Teléfono:</strong> <span>{{ usuarioActual.telefono }}</span>
         </li>
-        <!-- Agrega más campos según los datos que tengas en el usuarioActual -->
+        <li class="list-group-item">
+          <strong>Departamento:</strong> <span>{{ usuarioActual.departamento }}</span>
+        </li>
+        <li class="list-group-item">
+          <strong>Ubicación:</strong> <span>{{ usuarioActual.ubicacion }}</span>
+        </li>
+        <li class="list-group-item">
+          <strong>Rol:</strong> <span>{{ usuarioActual.rol }}</span>
+        </li>
       </ul>
     </div>
+  </div>
   
-    <ng-template #cargando>
-      <p>Cargando datos del usuario...</p>
-    </ng-template>
+    
+      <ng-template #cargando>
+        <p>Cargando datos del usuario...</p>
+      </ng-template>
   
