@@ -4,6 +4,7 @@ import { ActividadesService } from 'src/app/services/actividades.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin',
@@ -71,21 +72,39 @@ export class AdminComponent implements OnInit {
   }
 
   eliminarActividad(id: string): void {
-    if (confirm('¿Estás seguro de que deseas eliminar esta actividad?')) {
-      this.loading = true;
-      this.actividadesService.eliminarActividad(id)
-        .then(() => {
-          this.toastr.success('Exitoso!', 'Actividad eliminada con éxito!');
-          this.cargarActividades(); // Usar cargarActividades en lugar de obtenerActividades
-        })
-        .catch(error => {
-          console.error('Error al eliminar la actividad:', error);
-          this.toastr.error('Error al eliminar la actividad.');
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    }
+    Swal.fire({
+      title: "¿Estás seguro de que deseas eliminar esta actividad?",
+      text: "¡No podrás revertir esta acción!", // Use "!" for stronger emphasis
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6", // Optional: Set button color
+      cancelButtonColor: "#d33",    // Optional: Set button color
+      confirmButtonText: "¡Sí, eliminarla!", // Use "!" for stronger emphasis
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading = true;
+        this.actividadesService.eliminarActividad(id)
+          .then(() => {
+            Swal.fire({
+              title: "¡Eliminada!",
+              text: "La actividad ha sido eliminada con éxito.",
+              icon: "success"
+            });
+            this.cargarActividades(); // Use cargarActividades in success case
+          })
+          .catch(error => {
+            console.error('Error al eliminar la actividad:', error);
+            Swal.fire({
+              title: "Error",
+              text: "Ha ocurrido un error al eliminar la actividad.",
+              icon: "error"
+            });
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
+    });
   }
 
   filtrarActividades(): void {

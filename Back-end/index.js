@@ -5,7 +5,6 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 const { checkToken } = require('./utils/middlewares');
 
-
 const whileList = ['http://localhost:4200']
 require ("dotenv").config();
 
@@ -17,6 +16,7 @@ app.use(bodyParser.json());
 
 app.use('/actividades', require('./routes/actividades'));
 app.use('/usuario',require('./routes/usuario'))
+
 
 mongoose
 .connect(process.env.MONGO_URI) // llamado ala url que proporciona mongo desde .env

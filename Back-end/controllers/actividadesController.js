@@ -1,31 +1,74 @@
 const Actividades = require("../models/actividades");
 const Usuario = require('../models/usuario');
+const { enviarCorreo } = require('../utils/emailService');
 
 // Crear una nueva actividad
 exports.crearActividad = async (req, res) => {
-  
-    const { title, description, assignedTo, startDate, endDate, status} = req.body;
-    const createdBy = req.user._id; // Obtener el ID del usuario del token
+  const { title, description, assignedTo, startDate, endDate, status } = req.body;
+  const createdBy = req.user._id;
 
-    try {
+  try {
+      // Crear la actividad
       let actividad = new Actividades({
-        title,
-        description,
-        createdBy,
-        assignedTo,
-        startDate,
-        endDate,
-        status
+          title,
+          description,
+          createdBy,
+          assignedTo,
+          startDate,
+          endDate,
+          status
       });
 
-    // Guardar la actividad en la base de datos
-    await actividad.save();
-      res.status(201).json(actividad);
-    } catch (error) {
+      // Guardar la actividad
+      await actividad.save();
+
+      // Buscar información del usuario asignado y del creador
+      const usuarioAsignado = await Usuario.findById(assignedTo);
+      const usuarioCreador = await Usuario.findById(createdBy);
+
+      // Formatear las fechas para el correo
+      const fechaInicio = new Date(startDate).toLocaleDateString('es-ES');
+      const fechaFin = new Date(endDate).toLocaleDateString('es-ES');
+
+      // Crear el contenido del correo
+      const contenidoCorreo = `
+          <div style="font-family: Arial, sans-serif; padding: 20px;">
+              <h2>Nueva Actividad Asignada</h2>
+              <p>Hola ${usuarioAsignado.nombre},</p>
+              <p>Se te ha asignado una nueva actividad:</p>
+              <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px;">
+                  <h3 style="color: #333;">${title}</h3>
+                  <p><strong>Descripción:</strong> ${description}</p>
+                  <p><strong>Fecha de inicio:</strong> ${fechaInicio}</p>
+                  <p><strong>Fecha de finalización:</strong> ${fechaFin}</p>
+                  <p><strong>Asignado por:</strong> ${usuarioCreador.nombre}</p>
+              </div>
+              <p>Por favor, revisa los detalles y comienza a trabajar en ella.</p>
+              <p>Saludos cordiales,</p>
+              <p>Equipo de Gestión de Actividades</p>
+          </div>
+      `;
+
+      // Enviar el correo
+      await enviarCorreo(
+          usuarioAsignado.email,
+          'Nueva Actividad Asignada: ' + title,
+          contenidoCorreo
+      );
+
+      res.status(201).json({
+          actividad,
+          mensaje: 'Actividad creada y notificación enviada exitosamente'
+      });
+
+  } catch (error) {
       console.log(error);
-      res.status(500).send('Hubo un error al crear la actividad');
-    }
-  };
+      res.status(500).json({
+          msg: 'Hubo un error al crear la actividad',
+          error: error.message
+      });
+  }
+};
 
 // Obtener todas las actividades
 exports.obtenerActividadesPorUsuario = async (req, res) => {

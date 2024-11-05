@@ -24,16 +24,32 @@ export class EmpleadoComponent {
   }
 
   // Cargar actividades asignadas al empleado
-  cargarActividadesAsignadas() {
-    this.actividadesService.obtenerActividadesPorUsuario() // Llama a la función que obtendrá las actividades
-      .then(actividades => {
-        this.actividades = actividades; // Almacena las actividades en la variable
-      })
-      .catch(error => {
-        console.error('Error al cargar actividades asignadas:', error);
-      });
-  }
+cargarActividadesAsignadas() {
+  this.actividadesService.obtenerActividadesPorUsuario()
+    .then(actividades => {
+      console.log('Actividades obtenidas:', actividades); // Verificar que los datos incluyen el campo "status" y su valor
 
+      this.actividades = actividades;
+
+      // Filtra actividades con estatus 'Pendiente' o 'En Progreso'
+      const actividadesPendientesOEnProceso = this.actividades.filter(
+        actividad => actividad.status === 'Pendiente' || actividad.status === 'En Progreso'
+      );
+
+      if (actividadesPendientesOEnProceso.length > 0) {
+        const nombreUsuario = localStorage.getItem('nombreUsuario') || 'Empleado';
+        const cantidadActividades = actividadesPendientesOEnProceso.length;
+        const mensaje = `Hola ${nombreUsuario}, tienes ${cantidadActividades} actividad${cantidadActividades > 1 ? 'es' : ''} pendiente${cantidadActividades > 1 ? 's' : ''}.`;
+        this.toastr.info(mensaje);
+      } else {
+        this.toastr.info('Todas tus actividades asignadas han sido completadas.');
+      }
+    })
+    .catch(error => {
+      console.error('Error al cargar actividades asignadas:', error);
+    });
+}
+  
 
   // Actualizar estatus de la actividad
   actualizarEstatus(actividad: any) {
