@@ -15,6 +15,9 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarioComponent } from './components/calendario/calendario.component';
 import { UsuarioComponent } from './components/usuario/usuario.component';
+import { CrearReporteComponent } from './components/crear-reporte/crear-reporte.component';
+import { ObtenerReporteComponent } from './components/obtener-reporte/obtener-reporte.component';
+import { RevisarReporteComponent } from './components/revisar-reporte/revisar-reporte.component';
 
 
 @NgModule({
@@ -25,7 +28,10 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
     CrearActividadComponent,
     EmpleadoComponent,
     CalendarioComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    CrearReporteComponent,
+    ObtenerReporteComponent,
+    RevisarReporteComponent,
   ],
   imports: [
     BrowserModule,

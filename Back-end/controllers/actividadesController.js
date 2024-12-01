@@ -237,3 +237,4 @@ exports.verificarActividad = async (req, res) => {
   }
 };
 
+

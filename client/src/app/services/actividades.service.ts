@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +12,11 @@ export class ActividadesService {
   private httpClient = inject(HttpClient);  // Inyecta HttpClient
   private baseUrl: string;
   private baseUr2: string;
+  
 
   constructor() { 
     this.baseUrl = `http://localhost:3000/actividades`; // URL base para la API de actividades
-    this.baseUr2 = `http://localhost:3000/usuario`
+    this.baseUr2 = `http://localhost:3000/usuario`;
   }
 
   // Método para crear una actividad
@@ -27,6 +28,8 @@ export class ActividadesService {
       })
     );
   }
+
+  
 
   obtenerEmpleados() {
     return firstValueFrom(
@@ -136,6 +139,7 @@ export class ActividadesService {
       })
     );
   }
+
 }
 
 

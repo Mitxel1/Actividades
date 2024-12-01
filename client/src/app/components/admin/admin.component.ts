@@ -37,8 +37,11 @@ export class AdminComponent implements OnInit {
     this.loading = true;
     this.actividadesService.obtenerActividadesPorUsuario()
       .then(actividades => {
-        this.actividades = actividades;
-        this.filteredActividades = [...actividades]; // Inicializar las actividades filtradas
+        this.actividades = actividades.map(actividad => ({
+          ...actividad,
+          mostrarBoton: actividad.status !== 'Completada'
+        }));
+        this.filteredActividades = [...this.actividades];
         this.loading = false;
       })
       .catch(error => {
@@ -46,6 +49,38 @@ export class AdminComponent implements OnInit {
         this.mensaje = 'Error al cargar actividades.';
         this.loading = false;
       });
+  }
+
+  // Método para finalizar una actividad
+  finalizarActividad(actividad: any): void {
+    Swal.fire({
+      title: "¿Estás seguro de que deseas finalizar esta actividad?",
+      text: "Esta acción marcará la actividad como completada",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, finalizar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading = true;
+        this.actividadesService.completarActividad(actividad._id)
+          .then(() => {
+            actividad.status = 'Completada';
+            actividad.mostrarBoton = false;
+            this.toastr.success('La actividad ha sido finalizada con éxito.');
+            this.cargarActividades();
+          })
+          .catch(error => {
+            console.error('Error al finalizar la actividad:', error);
+            this.toastr.error('Error al finalizar la actividad.');
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+      }
+    });
   }
 
   seleccionarActividad(actividad: any): void {
@@ -58,7 +93,7 @@ export class AdminComponent implements OnInit {
       this.actividadesService.actualizarActividad(this.actividadSeleccionada._id, this.actividadSeleccionada)
         .then(() => {
           this.toastr.success('Exitoso!', 'Actividad actualizada con éxito!');
-          this.cargarActividades(); // Usar cargarActividades en lugar de obtenerActividades
+          this.cargarActividades();
           this.actividadSeleccionada = null;
         })
         .catch(error => {
@@ -74,12 +109,12 @@ export class AdminComponent implements OnInit {
   eliminarActividad(id: string): void {
     Swal.fire({
       title: "¿Estás seguro de que deseas eliminar esta actividad?",
-      text: "¡No podrás revertir esta acción!", // Use "!" for stronger emphasis
+      text: "¡No podrás revertir esta acción!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6", // Optional: Set button color
-      cancelButtonColor: "#d33",    // Optional: Set button color
-      confirmButtonText: "¡Sí, eliminarla!", // Use "!" for stronger emphasis
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "¡Sí, eliminarla!",
     }).then((result) => {
       if (result.isConfirmed) {
         this.loading = true;
@@ -90,7 +125,7 @@ export class AdminComponent implements OnInit {
               text: "La actividad ha sido eliminada con éxito.",
               icon: "success"
             });
-            this.cargarActividades(); // Use cargarActividades in success case
+            this.cargarActividades();
           })
           .catch(error => {
             console.error('Error al eliminar la actividad:', error);
@@ -111,10 +146,10 @@ export class AdminComponent implements OnInit {
     this.filteredActividades = this.actividades.filter(actividad => {
       const cumpleStatus = !this.statusFilter || actividad.status === this.statusFilter;
       const cumpleEmpleado = !this.employeeNameFilter || 
-        actividad.empleado.toLowerCase().includes(this.employeeNameFilter.toLowerCase());
+        (actividad.assignedTo && actividad.assignedTo.nombre.toLowerCase().includes(this.employeeNameFilter.toLowerCase()));
       return cumpleStatus && cumpleEmpleado;
     });
-  }
+  }  
 
   cargarEmpleados(): void {
     this.actividadesService.obtenerEmpleados()
@@ -122,6 +157,10 @@ export class AdminComponent implements OnInit {
         this.empleados = empleados;
       })
       .catch(error => console.error("Error al cargar empleados:", error));
+  }
+
+  Revisar(actividadId: string) {
+    this.router.navigate(['reporte/actividad', actividadId]);
   }
 
   onClickLogout(): void {

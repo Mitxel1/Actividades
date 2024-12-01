@@ -1,0 +1,98 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/empleado">
+      <img src="../../../assets/img/logo.png" height="50" class="d-inline-block align-top" alt="Logo">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav w-100">
+        <li class="nav-item">
+          <a class="btn nav-link text-dark" href="/calendario">Calendario</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn nav-link text-dark" aria-current="page" href="/empleado">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn nav-link text-dark" href="/usuario">Yo</a>
+        </li>
+        <!-- Logout button aligned to the right -->
+        <li class="nav-item ms-auto">
+          <a class="btn btn-danger" href="#" (click)="onClickLogout()">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  
+
+<div class="crear-reporte">
+    <h2>Crear Reporte</h2>
+    <form [formGroup]="reporteForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input id="titulo" formControlName="titulo" class="form-control" type="text" required />
+        <div *ngIf="reporteForm.get('titulo')?.invalid && reporteForm.get('titulo')?.touched" class="error">
+          El título es obligatorio.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contenido">Contenido</label>
+        <textarea id="contenido" formControlName="contenido" class="form-control" required></textarea>
+        <div *ngIf="reporteForm.get('contenido')?.invalid && reporteForm.get('contenido')?.touched" class="error">
+          El contenido es obligatorio.
+        </div>
+      </div>
+      
+  
+      <!-- Recursos -->
+      <div formArrayName="recursos">
+        <h3>Recursos</h3>
+        <div *ngFor="let recurso of recursos.controls; let i = index">
+          <input [formControlName]="i" class="form-control" placeholder="Recurso {{i + 1}}" />
+          <button type="button" (click)="removerCampo('recursos', i)">Eliminar</button>
+        </div>
+        <button type="button" (click)="agregarCampo('recursos')">Agregar Recurso</button>
+      </div>
+  
+      <!-- Problemas -->
+      <div formArrayName="problemas">
+        <h3>Problemas</h3>
+        <div *ngFor="let problema of problemas.controls; let i = index">
+          <input [formControlName]="i" class="form-control" placeholder="Problema {{i + 1}}" />
+          <button type="button" (click)="removerCampo('problemas', i)">Eliminar</button>
+        </div>
+        <button type="button" (click)="agregarCampo('problemas')">Agregar Problema</button>
+      </div>
+  
+      <!-- Soluciones -->
+      <div formArrayName="soluciones">
+        <h3>Soluciones</h3>
+        <div *ngFor="let solucion of soluciones.controls; let i = index">
+          <input [formControlName]="i" class="form-control" placeholder="Solución {{i + 1}}" />
+          <button type="button" (click)="removerCampo('soluciones', i)">Eliminar</button>
+        </div>
+        <button type="button" (click)="agregarCampo('soluciones')">Agregar Solución</button>
+      </div>
+  
+      <button type="submit" class="btn btn-primary" [disabled]="submitting">
+        {{ submitting ? 'Enviando...' : 'Crear Reporte' }}
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="reportes.length > 0; else noReportes">
+    <h2>Reportes de la Actividad</h2>
+    <ul>
+      <li *ngFor="let reporte of reportes">
+        <h3>{{ reporte.titulo }}</h3>    
+        <p>Fecha de creación: {{ reporte.fechaCreacion | date:'dd/MM/yyyy' }}</p>
+        <!-- Agrega más detalles del reporte según sea necesario -->
+      </li>
+    </ul>
+  </div>
+  <ng-template #noReportes>
+    <p>No hay reportes disponibles para esta actividad.</p>
+  </ng-template>
+  
+  
+  

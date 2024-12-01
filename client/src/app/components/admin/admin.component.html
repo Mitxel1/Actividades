@@ -8,7 +8,7 @@
         <a class="nav-link" href="/crear-actividad">Crear actividad</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/">Registrar Usuarios</a>
+        <a class="nav-link" href="/"></a>
       </li>
       <!-- Logout button aligned to the right -->
       <li class="nav-item ms-auto">
@@ -76,10 +76,26 @@
             </div>
           </div>
           <div class="card-footer d-flex justify-content-between">
-            <ng-container *ngIf="!actividad.verificada">
-              <button class="btn btn-outline-primary btn-sm" (click)="seleccionarActividad(actividad)">Editar</button>
-              <button class="btn btn-outline-danger btn-sm" (click)="eliminarActividad(actividad._id)">Eliminar</button>
-            </ng-container>
+           
+              
+<!-- Los otros botones también deberían ocultarse cuando la actividad esté completada -->
+              
+              <button *ngIf="actividad.status !== 'Completada'"
+                        (click)="seleccionarActividad(actividad)"
+                        class="btn btn-primary">Editar
+                </button>
+
+              <button *ngIf="actividad.status !== 'Completada'"
+                        (click)="eliminarActividad(actividad._id)"
+                        class="btn btn-danger">
+                        Eliminar
+              </button>
+
+              <button 
+                    *ngIf="actividad.status === 'Completada'"
+                    (click)="Revisar(actividad._id)">
+                    Revición
+          </button>
           </div>
         </div>
       </div>

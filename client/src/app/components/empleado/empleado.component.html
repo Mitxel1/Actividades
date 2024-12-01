@@ -44,10 +44,15 @@
         <td>{{ actividad.endDate | date:'short' }}</td>
         <td>{{ actividad.status }}</td> <!-- Mostrar el estatus -->
         <td>
+          <button *ngIf="actividad.status !== 'Completada'" (click)="actualizarEstatus(actividad)">
+            Actualizar Estado
+          </button>
+
+          <!-- Botón para ir al reporte de la actividad -->
           <button 
-            class="btn btn-primary"
-            (click)="actualizarEstatus(actividad)">
-            Actualizar Estatus
+              *ngIf="actividad.status === 'Completada'"
+              (click)="crearReporte(actividad._id)">
+              Crear Reporte
           </button>
         </td>
       </tr>

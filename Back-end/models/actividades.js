@@ -22,7 +22,7 @@ const actividadesSchema = mongoose.Schema({
         type: String,
         enum: ['Pendiente', 'En Progreso', 'Completada'], 
         default: 'Pendiente'                            // Estatus inicial
-    },
+    }
 }, { timestamps: true });
 
 

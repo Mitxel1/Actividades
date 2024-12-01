@@ -27,6 +27,7 @@ export class UsuariosService {
       this.httpClient.post<any>(`${this.baseUrl}/login`, credentials)
     );
   }
+  
 
 isLogged(): boolean{
   return localStorage.getItem('token') ? true : false;

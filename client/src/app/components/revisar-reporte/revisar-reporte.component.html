@@ -1,0 +1,102 @@
+<!-- revisar-reporte.component.html -->
+<div class="container mx-auto p-4">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+      <!-- Header -->
+      <div class="border-b p-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold text-gray-800">Revisión de Reporte</h2>
+          <!--<button 
+            (click)="router.navigate(['/reporte/actividad', reporte?.actividad])"
+            class="text-blue-500 hover:text-blue-600">
+            Volver a la lista
+          </button>
+        </div>
+      </div>-->
+  
+      <div *ngIf="loading" class="p-6 text-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+      </div>
+  
+      <div *ngIf="!loading && reporte" class="p-6">
+        <!-- Metadata del reporte -->
+        <div class="mb-6">
+          <p class="text-sm text-gray-600">
+            Creado por: {{reporte.creadoPor?.nombre}}
+            <span class="mx-2">•</span>
+            {{reporte.createdAt | date:'medium'}}
+          </p>
+        </div>
+  
+        <!-- Contenido principal -->
+        <div class="space-y-6">
+          <!-- Contenido -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="font-semibold mb-2">Contenido del Reporte</h3>
+            <p class="whitespace-pre-line">{{reporte.contenido}}</p>
+          </div>
+  
+          <!-- Recursos -->
+          <div *ngIf="reporte.recursos?.length" class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="font-semibold mb-2">Recursos</h3>
+            <ul class="list-disc ml-6">
+              <li *ngFor="let recurso of reporte.recursos">{{recurso}}</li>
+            </ul>
+          </div>
+  
+          <!-- Problemas -->
+          <div *ngIf="reporte.problemas?.length" class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="font-semibold mb-2">Problemas</h3>
+            <ul class="list-disc ml-6">
+              <li *ngFor="let problema of reporte.problemas">{{problema}}</li>
+            </ul>
+          </div>
+  
+          <!-- Soluciones -->
+          <div *ngIf="reporte.soluciones?.length" class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="font-semibold mb-2">Soluciones</h3>
+            <ul class="list-disc ml-6">
+              <li *ngFor="let solucion of reporte.soluciones">{{solucion}}</li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- Comentarios existentes -->
+        <div class="mt-8">
+          <h3 class="font-semibold mb-4">Comentarios</h3>
+          <div class="space-y-4">
+            <div *ngFor="let comentario of reporte.comentarios" 
+                 class="bg-gray-50 p-4 rounded-lg">
+              <div class="flex justify-between items-start">
+                <span class="font-medium">{{comentario.creadoPor?.nombre}}</span>
+                <span class="text-sm text-gray-600">
+                  {{comentario.fecha | date:'short'}}
+                </span>
+              </div>
+              <p class="mt-2">{{comentario.contenido}}</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Formulario de nuevo comentario -->
+        <form [formGroup]="comentarioForm" (ngSubmit)="onSubmit()" class="mt-6">
+          <div class="space-y-4">
+            <div>
+              <label for="comentario" class="block text-sm font-medium text-gray-700">
+                Agregar comentario
+              </label>
+              <textarea
+                id="comentario"
+                formControlName="contenido"
+                rows="4"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                placeholder="Escribe tu comentario aquí..."
+              ></textarea>
+            </div>
+            <button type="submit" [disabled]="comentarioForm.invalid || submitting" class="btn btn-primary">
+                {{submitting ? 'Guardando...' : 'Guardar Comentario'}}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
